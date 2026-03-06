@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Header from "../HeaderComp";
 import GuestFilePreview from "./GuestFilePreview";
 import GuestFileUpload from "./GuestFileUpload";
-import Footer from "../Footer";
 
 
 const GuestHomePage = () => {
@@ -28,8 +27,6 @@ useEffect(() => {
             <GuestFilePreview guestFiles={files} />
             
             </main>
-            <Footer />
-            
 
           </div>
   );

@@ -136,16 +136,6 @@ const Home = () => {
           </button>
         </Link>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white text-center py-6">
-        <p>&copy; {new Date().getFullYear()} Share Pod. All rights reserved.</p>
-        <div className="flex justify-center space-x-4 mt-2">
-          <a href="https://facebook.com" className="hover:text-blue-400"><FaFacebook size={24} /></a>
-          <a href="https://twitter.com" className="hover:text-sky-400"><FaTwitter size={24} /></a>
-          <a href="https://instagram.com" className="hover:text-pink-500"><FaInstagram size={24} /></a>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -9,7 +9,11 @@ axios.defaults.withCredentials = true;
 // UPLOAD FILE
 export const uploadFile = createAsyncThunk("file/upload",async (formData, { rejectWithValue }) => {
     try {
-      const res = await axiosInstance.post("/files/upload", formData);
+      const res = await axiosInstance.post("/files/upload", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return res.data; // returns { message, fileIds }
     } catch (err) {
       return rejectWithValue(err.response?.data);

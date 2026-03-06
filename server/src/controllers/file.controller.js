@@ -1,14 +1,12 @@
 import { File } from '../models/file.models.js';
 import { GuestFile } from '../models/guestFile.models.js';
-import s3 from "../config/s3.js";
 import bcrypt from "bcryptjs";
-import AWS from "aws-sdk";
 import nodemailer from "nodemailer";
 import shortid from "shortid";
 import QRCode from "qrcode";
 import { User } from '../models/user.models.js';
 import path from "path";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 
@@ -21,15 +19,30 @@ const uploadFiles = async (req, res) => {
   const { isPassword, password, hasExpiry, expiresAt, userId } = req.body;
 
   try {
-    const s3 = new AWS.S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    // Check if MongoDB is connected
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    const s3Client = new S3Client({
       region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
     });
 
     const savedFiles = [];
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    
+    // Find user with error handling
+    let user = null;
+    try {
+      user = await User.findById(userId);
+      if (!user) return res.status(404).json({ error: 'User not found' });
+    } catch (dbError) {
+      console.error("Database error:", dbError.message);
+      return res.status(503).json({ error: 'Database connection unavailable. Please check MongoDB connection.' });
+    }
 
     for (const file of req.files) {
       const originalName = file.originalname;
@@ -44,8 +57,9 @@ const uploadFiles = async (req, res) => {
         ContentType: file.mimetype,
       };
 
-      const s3Result = await s3.upload(params).promise();
-      const fileUrl = s3Result.Location;
+      const command = new PutObjectCommand(params);
+      await s3Client.send(command);
+      const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/file-share-app/${finalFileName}`;
       const shortCode = shortid.generate();
 
       const fileObj = {
@@ -99,10 +113,12 @@ const uploadFilesGuest = async (req, res) => {
       const {isPassword,password,hasExpiry,expiresAt} = req.body;
 
       try {
-           const s3 = new AWS.S3({
-             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-             region: process.env.AWS_REGION
+           const s3Client = new S3Client({
+             region: process.env.AWS_REGION,
+             credentials: {
+               accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+               secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+             },
            });
 
             const savedFiles = [];
@@ -121,8 +137,9 @@ const uploadFilesGuest = async (req, res) => {
                 ContentType: file.mimetype,
               };
 
-              const s3Result = await s3.upload(params).promise();
-              const fileUrl = s3Result.Location;
+              const command = new PutObjectCommand(params);
+              await s3Client.send(command);
+              const fileUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/file-share-app/${finalFileName}`;
               const shortCode = shortid.generate();
 
               const username = shortid.generate();
@@ -333,20 +350,22 @@ const downloadFile = async (req, res) => {
       }
     }
 
-    const s3 = new AWS.S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      region: process.env.AWS_REGION
+    const s3Client = new S3Client({
+      region: process.env.AWS_REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
     });
 
-    const key = `file-share-app/${file.name}`;
     const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
-      Key: key,
-      Expires: 24 * 60 * 60,
+      Key: `file-share-app/${file.name}`,
+      ResponseContentDisposition: `attachment; filename="${file.name}"`
     };
 
-    const downloadUrl = s3.getSignedUrl('getObject', params);
+    const command = new GetObjectCommand(params);
+    const downloadUrl = await getSignedUrl(s3Client, command, { expiresIn: 24 * 60 * 60 });
     if (!downloadUrl) {
         return res.status(500).json({ error: 'Error generating download URL' });
     }
@@ -385,18 +404,21 @@ const deleteFile = async (req, res) => {
           return res.status(400).json({error:'File already deleted'});
         }
 
-        const s3 =new AWS.S3({
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-          region: process.env.AWS_REGION
-        })
+        const s3Client = new S3Client({
+          region: process.env.AWS_REGION,
+          credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+          },
+        });
 
-        const params={
+        const params = {
           Bucket: process.env.AWS_BUCKET_NAME,
           Key: `file-share-app/${file.name}`
-        }
+        };
 
-        await s3.deleteObject(params).promise();
+        const command = new DeleteObjectCommand(params);
+        await s3Client.send(command);
         
          await File.deleteOne({ _id: fileId });
 

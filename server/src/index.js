@@ -17,8 +17,11 @@ const PORT=process.env.PORT || 5600;
 
       
 const startServer = async () => {
-     try {
-    await connectDB();
+  try {
+    // Try to connect to MongoDB (non-blocking)
+    connectDB().catch(err => {
+      console.log('⚠️  MongoDB connection failed. Server will continue without database.');
+    });
 
     // Register routes
     app.use("/api/files", fileRoutes);
@@ -53,7 +56,8 @@ app.get('/f/:shortCode', async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error starting server:", error);
+    process.exit(1);
   }
-  };
-  
-  startServer();
+};
+
+startServer();
