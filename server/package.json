@@ -10,6 +10,10 @@
   },
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0 <=20.x",
+    "npm": ">=9.0.0"
+  },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.848.0",
     "@aws-sdk/s3-request-presigner": "^3.848.0",
@@ -35,3 +39,6 @@
     "uuid": "^13.0.0"
   }
 }
+
+
+

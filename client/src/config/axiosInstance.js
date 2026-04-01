@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const BASE_URL="http://localhost:6600/api/"
-const axiosInstance=axios.create({
-  baseURL: BASE_URL,
+// Using a relative URL so it works seamlessly on any domain (like AWS)
+const axiosInstance = axios.create({
+  baseURL: "/api",
   withCredentials: true
 });
 

@@ -1,0 +1,11 @@
+secrets/
+
+# Ignore generated docs and archives in project root
+/*.md
+/*.zip
+/*.ps1
+
+# Ignore old deployment artifacts in project root
+/.ebextensions/
+/.ebignore
+/deploy/

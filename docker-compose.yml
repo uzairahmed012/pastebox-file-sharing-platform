@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: pastebox-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pastebox-server
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    ports:
+      - "6600:6600"
+    environment:
+      MONGODB_URL: mongodb://mongo:27017
+      PORT: 6600
+      NODE_ENV: production
+      SERVER_URL: http://YOUR_EC2_PUBLIC_IP/api/files
+      CLIENT_URL: http://YOUR_EC2_PUBLIC_IP
+      AWS_REGION: us-east-1
+      AWS_BUCKET_NAME: mern-file-upload-bucket
+      BASE_URL: http://YOUR_EC2_PUBLIC_IP
+    secrets:
+      - jwt_secret
+      - aws_access_key_id
+      - aws_secret_access_key
+      - mail_user
+      - mail_pass
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: pastebox-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+
+volumes:
+  mongo_data:
+
+secrets:
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  aws_access_key_id:
+    file: ./secrets/aws_access_key_id.txt
+  aws_secret_access_key:
+    file: ./secrets/aws_secret_access_key.txt
+  mail_user:
+    file: ./secrets/mail_user.txt
+  mail_pass:
+    file: ./secrets/mail_pass.txt
