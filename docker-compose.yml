@@ -3,7 +3,7 @@ version: "3.9"
 services:
   mongo:
     image: mongo:7
-    container_name: pastebox-mongo
+    container_name: daybook-mongo
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -14,7 +14,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: pastebox-server
+    container_name: daybook-server
     restart: unless-stopped
     depends_on:
       - mongo
@@ -40,7 +40,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    container_name: pastebox-client
+    container_name: daybook-client
     restart: unless-stopped
     depends_on:
       - server

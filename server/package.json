@@ -5,8 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "test": "jest --coverage --watchAll=false",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --coverageReporters=lcov",
+    "start": "nodemon src/index.js",
+    "start:prod": "node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -37,6 +40,11 @@
     "qrcode": "^1.5.4",
     "shortid": "^2.2.17",
     "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "jest-junit": "^13.0.0"
   }
 }
 

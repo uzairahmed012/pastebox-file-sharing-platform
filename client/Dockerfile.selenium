@@ -1,0 +1,60 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies for Selenium and Chrome
+RUN apt-get update && apt-get install -y \
+    wget \
+    gnupg \
+    unzip \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
+
+# Download ChromeDriver
+RUN wget -q https://edgedl.me.chromium.org/edgedl/chrome/chrome-for-testing/118.0.5993.70/linux64/chrome-linux64.zip && \
+    unzip chrome-linux64.zip && \
+    mv chrome-linux64/chrome /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chrome && \
+    wget -q https://edgedl.me.chromium.org/edgedl/chrome/chrome-for-testing/118.0.5993.70/linux64/chromedriver-linux64.zip && \
+    unzip chromedriver-linux64.zip && \
+    mv chromedriver-linux64/chromedriver /usr/local/bin/ && \
+    chmod +x /usr/local/bin/chromedriver && \
+    rm -rf chrome-linux64 chromedriver-linux64 *.zip
+
+# Copy test files and requirements
+COPY requirements.txt .
+COPY tests/ ./tests/
+COPY pytest.ini .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set environment variables
+ENV APP_URL=http://client:80
+ENV CHROME_BIN=/usr/local/bin/chrome
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+echo "Starting Selenium Tests..."\n\
+export DISPLAY=:99\n\
+echo "Running tests with Chrome..."\n\
+pytest tests/ \\\n\
+    -v \\\n\
+    --tb=short \\\n\
+    --html=test-results/report.html \\\n\
+    --self-contained-html \\\n\
+    --junit-xml=test-results/results.xml \\\n\
+    --disable-warnings\n\
+' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Create test results directory
+RUN mkdir -p test-results
+
+ENTRYPOINT ["/app/entrypoint.sh"]
