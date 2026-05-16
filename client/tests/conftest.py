@@ -45,10 +45,23 @@ def chrome_driver(chrome_options):
     driver.quit()
 
 @pytest.fixture
-def browser(chrome_driver):
+def browser(chrome_driver, app_url):
     """Fixture to reset browser state between tests"""
+    # Ensure we are on the application URL so localStorage is available
+    try:
+        chrome_driver.get(app_url)
+    except Exception:
+        # If navigation fails, continue and let individual tests navigate as needed
+        pass
+
     chrome_driver.delete_all_cookies()
-    chrome_driver.execute_script("window.localStorage.clear();")
+    # Clear localStorage only after a valid page is loaded
+    try:
+        chrome_driver.execute_script("window.localStorage.clear();")
+    except Exception:
+        # Some pages (data: URLs) may disable storage; ignore in that case
+        pass
+
     yield chrome_driver
 
 @pytest.fixture

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="15" time="119.838" timestamp="2026-05-16T06:48:35.675593" hostname="DESKTOP-J81OADF"><testcase classname="test_file_upload.TestFileUploadFunctionality" name="test_upload_button_is_clickable" time="31.137"><failure message="AssertionError: Upload button should be found on page&#10;assert None is not None">tests\test_file_upload.py:64: in test_upload_button_is_clickable
+    assert upload_button is not None, "Upload button should be found on page"
+E   AssertionError: Upload button should be found on page
+E   assert None is not None</failure></testcase><testcase classname="test_file_upload.TestFileUploadFunctionality" name="test_upload_area_dropzone_visible" time="18.042" /><testcase classname="test_file_upload.TestFileUploadFunctionality" name="test_upload_progress_indicator" time="2.400" /><testcase classname="test_file_upload.TestFileUploadFunctionality" name="test_file_list_displays_uploaded_files" time="22.930" /><testcase classname="test_file_upload.TestUploadErrors" name="test_handles_file_size_limit" time="2.320" /><testcase classname="test_file_upload.TestUploadErrors" name="test_empty_upload_handling" time="2.474" /><testcase classname="test_file_upload.TestUploadUI" name="test_share_link_section_after_upload" time="2.520" /><testcase classname="test_file_upload.TestUploadUI" name="test_file_expiration_settings" time="2.519" /><testcase classname="test_home_page.TestHomePageBasics" name="test_home_page_loads_successfully" time="0.528" /><testcase classname="test_home_page.TestHomePageBasics" name="test_page_has_upload_section" time="18.675" /><testcase classname="test_home_page.TestHomePageBasics" name="test_navigation_elements_visible" time="2.473"><failure message="AssertionError: Navigation elements should be present&#10;assert False">tests\test_home_page.py:150: in test_navigation_elements_visible
+    assert navigation_found, "Navigation elements should be present"
+E   AssertionError: Navigation elements should be present
+E   assert False</failure></testcase><testcase classname="test_home_page.TestHomePageBasics" name="test_page_responsive_layout" time="3.639" /><testcase classname="test_home_page.TestHomePageInteraction" name="test_hover_effects_on_buttons" time="2.432"><failure message="Failed: Hover effect test failed: Message: element not interactable: [object HTMLButtonElement] has no size and location&#10;  (Session info: chrome=148.0.7778.168)&#10;Stacktrace:&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756d61e35+2e8d45]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756a8e6c0+155d0]&#10;&#09;chromedriver!(No symbol) [0x7ff7567dd57d]&#10;&#09;chromedriver!(No symbol) [0x7ff7567e54f1]&#10;&#09;chromedriver!(No symbol) [0x7ff7567e85b5]&#10;&#09;chromedriver!(No symbol) [0x7ff7567e867f]&#10;&#09;chromedriver!(No symbol) [0x7ff75683e3c4]&#10;&#09;chromedriver!(No symbol) [0x7ff75683daaf]&#10;&#09;chromedriver!(No symbol) [0x7ff7568903a0]&#10;&#09;chromedriver!(No symbol) [0x7ff75685fe6a]&#10;&#09;chromedriver!(No symbol) [0x7ff756884c63]&#10;&#09;chromedriver!(No symbol) [0x7ff756829d58]&#10;&#09;chromedriver!(No symbol) [0x7ff75682ac43]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756d8dab9+3149c9]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756d8802b+30ef3b]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756dac872+333782]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756aab785+32695]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756ab42bc+3b1cc]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756a97f24+1ee34]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756a980b4+1efc4]&#10;&#09;chromedriver!GetHandleVerifier [0x7ff756a7bf27+2e37]&#10;&#09;KERNEL32!BaseThreadInitThunk [0x7ffc07c4e8d7+17]&#10;&#09;ntdll!RtlUserThreadStart [0x7ffc08fac3fc+2c]">tests\test_home_page.py:241: in test_hover_effects_on_buttons
+    actions.move_to_element(button).perform()
+venv\Lib\site-packages\selenium\webdriver\common\action_chains.py:103: in perform
+    self.w3c_actions.perform()
+venv\Lib\site-packages\selenium\webdriver\common\actions\action_builder.py:96: in perform
+    self.driver.execute(Command.W3C_ACTIONS, enc)
+venv\Lib\site-packages\selenium\webdriver\remote\webdriver.py:345: in execute
+    self.error_handler.check_response(response)
+venv\Lib\site-packages\selenium\webdriver\remote\errorhandler.py:229: in check_response
+    raise exception_class(message, screen, stacktrace)
+E   selenium.common.exceptions.ElementNotInteractableException: Message: element not interactable: [object HTMLButtonElement] has no size and location
+E     (Session info: chrome=148.0.7778.168)
+E   Stacktrace:
+E   	chromedriver!GetHandleVerifier [0x7ff756d61e35+2e8d45]
+E   	chromedriver!GetHandleVerifier [0x7ff756a8e6c0+155d0]
+E   	chromedriver!(No symbol) [0x7ff7567dd57d]
+E   	chromedriver!(No symbol) [0x7ff7567e54f1]
+E   	chromedriver!(No symbol) [0x7ff7567e85b5]
+E   	chromedriver!(No symbol) [0x7ff7567e867f]
+E   	chromedriver!(No symbol) [0x7ff75683e3c4]
+E   	chromedriver!(No symbol) [0x7ff75683daaf]
+E   	chromedriver!(No symbol) [0x7ff7568903a0]
+E   	chromedriver!(No symbol) [0x7ff75685fe6a]
+E   	chromedriver!(No symbol) [0x7ff756884c63]
+E   	chromedriver!(No symbol) [0x7ff756829d58]
+E   	chromedriver!(No symbol) [0x7ff75682ac43]
+E   	chromedriver!GetHandleVerifier [0x7ff756d8dab9+3149c9]
+E   	chromedriver!GetHandleVerifier [0x7ff756d8802b+30ef3b]
+E   	chromedriver!GetHandleVerifier [0x7ff756dac872+333782]
+E   	chromedriver!GetHandleVerifier [0x7ff756aab785+32695]
+E   	chromedriver!GetHandleVerifier [0x7ff756ab42bc+3b1cc]
+E   	chromedriver!GetHandleVerifier [0x7ff756a97f24+1ee34]
+E   	chromedriver!GetHandleVerifier [0x7ff756a980b4+1efc4]
+E   	chromedriver!GetHandleVerifier [0x7ff756a7bf27+2e37]
+E   	KERNEL32!BaseThreadInitThunk [0x7ffc07c4e8d7+17]
+E   	ntdll!RtlUserThreadStart [0x7ffc08fac3fc+2c]
+
+During handling of the above exception, another exception occurred:
+tests\test_home_page.py:252: in test_hover_effects_on_buttons
+    pytest.fail(f"Hover effect test failed: {str(e)}")
+E   Failed: Hover effect test failed: Message: element not interactable: [object HTMLButtonElement] has no size and location
+E     (Session info: chrome=148.0.7778.168)
+E   Stacktrace:
+E   	chromedriver!GetHandleVerifier [0x7ff756d61e35+2e8d45]
+E   	chromedriver!GetHandleVerifier [0x7ff756a8e6c0+155d0]
+E   	chromedriver!(No symbol) [0x7ff7567dd57d]
+E   	chromedriver!(No symbol) [0x7ff7567e54f1]
+E   	chromedriver!(No symbol) [0x7ff7567e85b5]
+E   	chromedriver!(No symbol) [0x7ff7567e867f]
+E   	chromedriver!(No symbol) [0x7ff75683e3c4]
+E   	chromedriver!(No symbol) [0x7ff75683daaf]
+E   	chromedriver!(No symbol) [0x7ff7568903a0]
+E   	chromedriver!(No symbol) [0x7ff75685fe6a]
+E   	chromedriver!(No symbol) [0x7ff756884c63]
+E   	chromedriver!(No symbol) [0x7ff756829d58]
+E   	chromedriver!(No symbol) [0x7ff75682ac43]
+E   	chromedriver!GetHandleVerifier [0x7ff756d8dab9+3149c9]
+E   	chromedriver!GetHandleVerifier [0x7ff756d8802b+30ef3b]
+E   	chromedriver!GetHandleVerifier [0x7ff756dac872+333782]
+E   	chromedriver!GetHandleVerifier [0x7ff756aab785+32695]
+E   	chromedriver!GetHandleVerifier [0x7ff756ab42bc+3b1cc]
+E   	chromedriver!GetHandleVerifier [0x7ff756a97f24+1ee34]
+E   	chromedriver!GetHandleVerifier [0x7ff756a980b4+1efc4]
+E   	chromedriver!GetHandleVerifier [0x7ff756a7bf27+2e37]
+E   	KERNEL32!BaseThreadInitThunk [0x7ffc07c4e8d7+17]
+E   	ntdll!RtlUserThreadStart [0x7ffc08fac3fc+2c]</failure></testcase><testcase classname="test_home_page.TestHomePageInteraction" name="test_guest_access_without_login" time="2.445" /><testcase classname="test_home_page.TestHomePageInteraction" name="test_page_load_performance" time="4.443" /></testsuite></testsuites>
